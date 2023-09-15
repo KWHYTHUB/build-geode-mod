@@ -24,11 +24,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          repository: geode-sdk/textureldr
+          repository: KWHYTHUB/textureldr
           path: textureldr
 
       - name: Build the mod
-        uses: geode-sdk/build-geode-mod@main
+        uses: KWHYTHUB/build-sapphire-mod@main
         with:
           sdk: nightly
           build-config: RelWithDebInfo
@@ -41,7 +41,7 @@ jobs:
     needs: ['build']
 
     steps:
-      - uses: geode-sdk/build-geode-mod/@combine
+      - uses: KWHYTHUB/build-sapphire-mod/@combine
         id: build
 
       - uses: actions/upload-artifact@v3

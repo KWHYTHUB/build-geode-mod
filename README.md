@@ -1,11 +1,11 @@
-# build-geode-mod
-An easy to use action to build a geode mod within github actions.
+# build-sapphire-mod
+An easy to use action to build a sapphire mod within github actions.
 
-This repository contains two actions, one for just building the mods, and another for combining builds for multiple platforms into a single .geode file.
+This repository contains two actions, one for just building the mods, and another for combining builds for multiple platforms into a single .sapphire file.
 
 # Usage
 ```yml
-- uses: geode-sdk/build-geode-mod@main
+- uses: KWHYTHUB/build-sapphire-mod@main
   with:
     # Which version of the SDK to use. Use nightly to specify latest commit
     # Default: latest
@@ -28,7 +28,7 @@ This repository contains two actions, one for just building the mods, and anothe
     # Path to the project which to build. Defaults to current directory.
     path: ''
 
-    # Set this to true if you plan on merging .geode files later. See the README for more info.
+    # Set this to true if you plan on merging .sapphire files later. See the README for more info.
     # Default: false
     combine: ''
 ```
@@ -37,7 +37,7 @@ This repository contains two actions, one for just building the mods, and anothe
 
 ## Building and uploading a mod on latest sdk
 ```yml
-- uses: geode-sdk/build-geode-mod@main
+- uses: KWHYTHUB/build-sapphire-mod@main
   id: build
 
 - uses: actions/upload-artifact@v3
@@ -49,14 +49,14 @@ This repository contains two actions, one for just building the mods, and anothe
 ## Building with RelWithDebInfo
 Note: the pdb is discarded for now
 ```yml
-- uses: geode-sdk/build-geode-mod@main
+- uses: KWHYTHUB/build-sapphire-mod@main
   id: build
   with:
     build-config: RelWithDebInfo
 ```
 
 # Combine
-It is also possible to build mods for different platforms, and then afterwards combine them into a single .geode file.
+It is also possible to build mods for different platforms, and then afterwards combine them into a single .sapphire file.
 
 Usually this is done using a matrix, and due to limitations on how much actions can do, you will have to add another job for the combining.
 
@@ -65,7 +65,7 @@ To do this, make sure to set `combine: true` on the build action!
 ## Building a mod on mac and windows, and then combining it
 Full workflow:
 ```yml
-name: Build Geode Mod
+name: Build Sapphire Mod
 
 on:
   workflow_dispatch:
@@ -92,7 +92,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Build the mod
-        uses: geode-sdk/build-geode-mod@main
+        uses: KWHYTHUB/build-sapphire-mod@main
         with:
           combine: true
       
@@ -102,7 +102,7 @@ jobs:
     needs: ['build']
 
     steps:
-      - uses: geode-sdk/build-geode-mod@combine
+      - uses: KWHYTHUB/build-sapphire-mod@combine
         id: build
 
       - uses: actions/upload-artifact@v3

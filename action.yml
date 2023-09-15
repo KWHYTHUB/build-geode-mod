@@ -1,5 +1,5 @@
-name: Build Geode mod
-description: Builds a Geode mod
+name: Build Sapphire mod
+description: Builds a Sapphire mod
 
 inputs:
   sdk:
@@ -27,13 +27,13 @@ inputs:
     required: false
     default: ./
   combine:
-    description: Set this to true if you plan on merging .geode files later. See the README for more info.
+    description: Set this to true if you plan on merging .sapphire files later. See the README for more info.
     required: false
     default: false
 
 outputs:
   build-output:
-    description: A folder containing the built .geode file(s)
+    description: A folder containing the built .sapphire file(s)
     value: ${{ steps.build.outputs.output }}
 
 runs:
@@ -53,7 +53,7 @@ runs:
     - name: Download CLI
       uses: robinraju/release-downloader@v1.8
       with:
-        repository: geode-sdk/cli
+        repository: KWHYTHUB/cli
         latest: ${{ inputs.cli == 'latest' }}
         tag: ${{ inputs.cli != 'latest' && inputs.cli || '' }}
         tarBall: false
@@ -69,29 +69,29 @@ runs:
       shell: bash
       run: |
         if [ ${{ steps.platform.outputs.id }} != "win" ]; then
-          chmod +x "${{ github.action_path }}/geode"
+          chmod +x "${{ github.action_path }}/sapphire"
         fi
 
         export CLI_PROFILE="${{ github.action_path }}/cli-profile"
         # for windows
-        mkdir -p "$CLI_PROFILE/geode/mods"
+        mkdir -p "$CLI_PROFILE/sapphire/mods"
         # for mac
-        mkdir -p "$CLI_PROFILE/Contents/geode/mods"
-        geode profile add --name GithubActions "$CLI_PROFILE"
+        mkdir -p "$CLI_PROFILE/Contents/sapphire/mods"
+        sapphire profile add --name GithubActions "$CLI_PROFILE"
 
-        geode sdk install "${{ github.action_path }}/geode-sdk-clone"
+        sapphire sdk install "${{ github.action_path }}/sapphire-clone"
         
         # silly github actions wont refresh the env
-        export GEODE_SDK="${{ github.action_path }}/geode-sdk-clone"
-        echo "GEODE_SDK=$GEODE_SDK" >> $GITHUB_ENV
+        export SAPPHIRE_SDK="${{ github.action_path }}/sapphire-clone"
+        echo "SAPPHIRE_SDK=$SAPPHIRE_SDK" >> $GITHUB_ENV
 
         if [ "${{ inputs.sdk }}" == "latest" ]; then
           SDK_VERSION=stable
         else
           SDK_VERSION=${{ inputs.sdk }}
         fi
-        geode sdk update $SDK_VERSION
-        geode sdk install-binaries
+        sapphire sdk update $SDK_VERSION
+        sapphire sdk install-binaries
 
         export CPM_CACHE="${{ github.action_path }}/cpm-cache"
         echo "CPM_SOURCE_CACHE=$CPM_CACHE" >> $GITHUB_ENV
@@ -107,12 +107,12 @@ runs:
         else
           CMAKE_EXTRA_ARGS="-DCMAKE_OSX_DEPLOYMENT_TARGET=10.13"
         fi
-        cmake -B build $CMAKE_EXTRA_ARGS -DGEODE_DONT_INSTALL_MODS=On ${{ inputs.configure-args }}
+        cmake -B build $CMAKE_EXTRA_ARGS -DSAPPHIRE_DONT_INSTALL_MODS=On ${{ inputs.configure-args }}
         cmake --build build --config ${{ inputs.build-config }} ${{ inputs.build-args }}
 
         mkdir "${{ github.action_path }}/output"
         
-        for file in $(find ./build -name *.geode); do
+        for file in $(find ./build -name *.sapphire); do
           cp $file "${{ github.action_path }}/output"
         done
 
@@ -130,5 +130,5 @@ runs:
       if: ${{ inputs.combine }}
       uses: actions/upload-artifact@v3
       with:
-        name: "geode-build-${{ steps.platform.outputs.id }}"
-        path: "${{ steps.build.outputs.output }}/*.geode"
+        name: "sapphire-build-${{ steps.platform.outputs.id }}"
+        path: "${{ steps.build.outputs.output }}/*.sapphire"
